@@ -1,0 +1,1 @@
+### Dispose(); // Giải phóng tài nguyên và đóng form -> Dùng cho nút thoát
