@@ -53,6 +53,32 @@ namespace QLSinhVien
                 CloseConnection(); // Đảm bảo đóng kết nối trong khối finally để tránh rò rỉ kết nối
             }
         }
+
+        public static DataTable LoadCSDL(string query)
+        {
+            DataTable dlieu = new DataTable(); // Tạo đối tượng DataTable để lưu trữ dữ liệu
+
+            try
+            {
+                OpenConnection(); // Mở kết nối đến database
+
+                SqlCommand command = new SqlCommand(query, connection); // Tạo đối tượng để thực thi câu lệnh SQL
+                SqlDataAdapter da = new SqlDataAdapter(command); // Tạo đối tượng cầu nối giữa command và datatable
+
+                da.Fill(dlieu); // Điền dữ liệu từ SqlDataAdapter vào DataTable
+                                // tạo command viết code -> da cầu nối giữa command và datatable -> fill da vào dlieu và cuối cùng return dlieu(database)
+            }
+            catch (SqlException ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                CloseConnection(); // Đảm bảo đóng kết nối trong khối finally để tránh rò rỉ kết nối
+            }
+
+            return dlieu; // Trả về DataTable chứa dữ liệu
+        }
     }
 }
 
