@@ -19,5 +19,40 @@ namespace QLSinhVien
         {
             connection.Close();
         }
+
+        public static void GetAllDangNhap()
+        {
+            BindingList<DangNhapDTO> dnhap = new BindingList<DangNhapDTO>(); // Hoặc dùng List<DangNhapDTO>
+            try
+            {
+                OpenConnection(); // Mở kết nối đến database
+
+                string query = "SELECT * FROM DangNhap"; // Câu lệnh SQL để lấy tất cả dữ liệu từ bảng DangNhap
+                SqlCommand command = new SqlCommand(query, connection); // Tạo đối tượng SqlCommand để thực thi câu lệnh SQL
+
+                SqlDataReader reader = command.ExecuteReader(); // Thực thi câu lệnh và lấy dữ liệu trả về dưới dạng SqlDataReader
+
+                while (reader.Read()) // Đọc từng dòng dữ liệu (đọc khi còn dòng)
+                {
+                    DangNhapDTO dangNhap = new DangNhapDTO
+                    {
+                        TaiKhoan = reader["TaiKhoan"].ToString(), // Lấy giá trị "TaiKhoan" trong SQL
+                        MatKhau = reader["MatKhau"].ToString(),
+                        HoTen = reader["HoTen"].ToString(),
+                        Quyen = reader["Quyen"].ToString()
+                    };
+                    dnhap.Add(dangNhap); // Thêm đối tượng DangNhapDTO vào danh sách
+                }
+            }
+            catch (SqlException ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally // Dù có lỗi hay không thì khối finally vẫn luôn được thực thi
+            {
+                CloseConnection(); // Đảm bảo đóng kết nối trong khối finally để tránh rò rỉ kết nối
+            }
+        }
     }
 }
+
