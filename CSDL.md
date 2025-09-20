@@ -51,7 +51,7 @@ namespace QLSinhVien
 ```
 #### Sử dụng dữ liệu
 ```cs
-public static void GetAllDangNhap()
+public static void GetAllDangNhap() // DAO
 {
     BindingList<DangNhapDTO> dnhap = new BindingList<DangNhapDTO>(); // Hoặc dùng List<DangNhapDTO>
     try
@@ -129,4 +129,73 @@ query -> lấy data từ csdl -> dataBase -> dataGridView
 
             return dlieu; // Trả về DataTable chứa dữ liệu
         }
+```
+
+---
+
+
+# Thêm mới & lưu 
+#### Thêm
+```cs
+private void btnAdd_Click(object sender, EventArgs e)
+{
+    // Tạo form AddNhanVienForm
+    AddNhanVienForm addNV = new AddNhanVienForm();
+    // Hiện form dưới dạng hộp thoại
+    // Chương trình dừng ngay dòng này, chờ đóng form AddNhanVienForm mới tiếp tục
+    addNV.ShowDialog();
+
+    /* =========================================== *\ 
+        DialogResult là thuộc tính có sẵn của Form.
+            - DialogResult.None
+            - DialogResult.OK
+            - DialogResult.Cancel
+            - DialogResult.Yes
+            - DialogResult.No
+            - DialogResult.Abort
+            - DialogResult.Retry
+            - DialogResult.Ignore
+    \* =========================================== */ 
+    if(addNV.DialogResult== DialogResult.OK) // Kiểm tra xem bấm nút OK chưa?
+    {
+        refreshDataGridView(nvBUS.getListNV()); // refresh bằng cách lấy danh sách nv mới nhất
+        // Hiện thông báo thêm thành công (optional)
+        AddSuccessNotification tb = new AddSuccessNotification();
+        tb.Show();
+    }
+}   
+```
+
+##### refreshDataGridView
+```cs
+        private void refreshDataGridView(BindingList<NhanVienDTO> listRefresh) // Tải lại DataGridView
+        {
+            DGVNhanVien.Rows.Clear();
+
+            foreach (NhanVienDTO nv in listRefresh)
+            {
+                if (nv.Trangthai == 1)
+                {
+                    string gioiTinh = nv.Gioitinh == 1 ? "Nam" : nv.Gioitinh == 2 ? "Nữ" : "Khác";
+                    DGVNhanVien.Rows.Add(nv.Manv, nv.Tennv, gioiTinh, nv.Sdt
+                   , nv.Ngaysinh.ToString("dd/MM/yyyy"), "Hoạt động");
+                }
+            }
+            DGVNhanVien.ClearSelection();
+
+        }
+```
+
+##### nvBUS
+```cs 
+private NhanVienBUS nvBUS = new NhanVienBUS();
+```
+
+##### getListNV
+```cs
+public BindingList<NhanVienDTO> getListNV() // (BUS)
+{
+    listNV = nvDAO.SelectAll();
+    return listNV;
+}
 ```
