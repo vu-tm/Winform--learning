@@ -134,8 +134,7 @@ query -> lấy data từ csdl -> dataBase -> dataGridView
 ---
 
 
-# Thêm mới & lưu 
-#### Thêm
+# Thêm mới 
 ```cs
 private void btnAdd_Click(object sender, EventArgs e)
 {
@@ -199,3 +198,56 @@ public BindingList<NhanVienDTO> getListNV() // (BUS)
     return listNV;
 }
 ```
+
+---
+
+---
+
+# Bài học rút ra:
+
+##### -> DTO: Nơi định nghĩa cấu trúc dữ liệu
+```cs
+public class NhanVienDTO
+{
+    private int manv;
+    private string tennv;
+    //... các thuộc tính khác
+    
+    // Constructor và properties
+    public override string ToString() { /* format hiển thị */ }
+}
+```
+##### -> DAO: Xử lý thao tác với database
+```cs
+public class NhanVienDAO : DAOInterface<NhanVienDTO>
+{
+    public int Insert(NhanVienDTO t) { /* thêm mới */ }
+    public int Update(NhanVienDTO t) { /* cập nhật */ }
+    public int Delete(int t) { /* xóa mềm (set status = 0) */ }
+    public BindingList<NhanVienDTO> SelectAll() { /* lấy tất cả */ }
+    public NhanVienDTO SelectById(int t) { /* lấy theo ID */ }
+}
+```
+##### -> BUS: Xử lý trung gian giữa GUI và DAO
+```cs
+public class NhanVienBUS
+{
+    private BindingList<NhanVienDTO> listNV;
+    
+    public Boolean removeNhanVien(int maNV) { /* xóa + cập nhật list */ }
+    public Boolean insertNhanVien(NhanVienDTO NV) { /* thêm mới */ }
+    public BindingList<NhanVienDTO> SearchNhanVien(string search) { /* tìm kiếm */ }
+}
+```
+##### -> GUI: Hiển thị giao diện và tương tác
+```cs
+public partial class NhanVienGUI : Form
+{
+    private void NhanVienGUI_Load() { /* khởi tạo DataGridView */ }
+    private void DGVNhanVien_CellPainting() { /* vẽ nút tùy chỉnh */ }
+    private void refreshDataGridView() { /* làm mới dữ liệu */ }
+}
+```
+
+
+
